@@ -233,10 +233,11 @@ def plot(data, idx,
                 raise IndexError('{0} is not a column in `data`.'.format(g))
         ## Melt it so it is easier to use.
         x = 'group'
-        if swarm_label is None:
-            y = 'value'
-        else:
-            y = str(swarm_label)
+        y = 'value'
+        # if swarm_label is None:
+        #     y = 'value'
+        # else:
+        #     y = str(swarm_label)
 
         if color_col is None:
             idv = ['index']
@@ -686,7 +687,10 @@ def plot(data, idx,
         if j > 0:
             ax_raw.set_ylabel('')
         else:
-            ax_raw.set_ylabel(y)
+            if swarm_label is None:
+                ax_raw.set_ylabel(y)
+            else:
+                ax_raw.set_ylabel(swarm_label)
 
         if float_contrast is False:
             if j > 0:
