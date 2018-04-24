@@ -241,3 +241,13 @@ def gapped_lines(data, x, y,
                                     [cm, cm],
                                     **kwargs)
         ax.add_line(mean_line)
+
+def make_nice_label(string, div):
+    l = []
+
+    if isinstance(string, str) is False:
+        string = str(string)
+
+    for i in range(0, len(string), div):
+        l.append(string[i: i+div])
+    return '-\n'.join(l)
