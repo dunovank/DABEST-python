@@ -164,7 +164,7 @@ def plot(data, idx,
     import pandas as pd
 
     from .plot_tools import halfviolin, align_yaxis, rotate_ticks
-    from .plot_tools import gapped_lines, get_swarm_spans
+    from .plot_tools import gapped_lines, get_swarm_spans, make_nice_label
     from .bootstrap_tools import bootstrap, jackknife_indexes, bca
     from .misc_tools import merge_two_dicts
 
@@ -684,13 +684,23 @@ def plot(data, idx,
                 right=False)
 
         # SET Y AXIS LABELS .
+        # first we make a nice label if the string `y` exceeds 20 characters.
+        if len(y) > 20:
+            y_label = make_nice_label(y, 15)
+        else:
+            y_label = y
+            
         if j > 0:
             ax_raw.set_ylabel('')
         else:
             if swarm_label is None:
-                ax_raw.set_ylabel(y)
+                ax_raw.set_ylabel(y_label)
             else:
-                ax_raw.set_ylabel(swarm_label)
+                if len(str(swarm_label)) > 20:
+                    nice_swarm_label = make_nice_label(swarm_label, 15)
+                else:
+                    nice_swarm_label = str(swarm_label)
+                ax_raw.set_ylabel(nice_swarm_label)
 
         if float_contrast is False:
             if j > 0:
@@ -698,11 +708,15 @@ def plot(data, idx,
             else:
                 if contrast_label is None:
                     if paired:
-                        ax_contrast.set_ylabel('paired delta\n'+y)
+                        ax_contrast.set_ylabel('paired delta\n' + y_label)
                     else:
-                        ax_contrast.set_ylabel('delta\n'+y)
+                        ax_contrast.set_ylabel('delta\n' + y_label)
                 else:
-                    ax_contrast.set_ylabel(str(contrast_label))
+                    if len(str(contrast_label)) > 20:
+                        nice_contrast_label = make_nice_label(contrast_label, 15)
+                    else:
+                        nice_contrast_label = str(contrast_label)
+                    ax_contrast.set_ylabel(nice_contrast_label)
 
         # ROTATE X-TICKS OF ax_contrast
         rotate_ticks(ax_contrast, angle=45, alignment='right')
