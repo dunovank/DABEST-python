@@ -145,11 +145,57 @@ def plot(data, idx,
 
      Returns:
         A matplotlib Figure.
-        Arrangement of the axes. Obtaining access to them via figure.axes[i]
+            For each comparison, there are TWO AxesSubplot objects: the raw
+            swarmplot axes, and the bootstrapped difference axes. Each axes can
+            be accessed by `figure.axes[i]`, where i is any integer less than
+            2 * the number of comparisons. The swarmplot axes are even-numbered
+            (i.e. 0, 2, 4...) and the difference axes are odd numbered.
 
-        A pandas DataFrame.
-        Description of column headings.
+        A pandas DataFrame with the following columns:
+            reference_group, experimental_group: string
+                The name of the respective groups, as derived from the dataset.
 
+            stat_summary: float
+                The summary statistic.
+
+            is_difference: boolean
+                Whether or not the summary is the difference between two groups.
+                If False, only x1 was supplied.
+
+            is_paired: boolean
+                Whether or not the difference reported is between 2 paired groups.
+
+            bca_ci_low, bca_ci_high: floats
+                The upper and lower bounds of the bias-corrected and accelerated
+                (BCa) confidence interval. See Efron 1977.
+
+            pvalue_2samp_ind_ttest: float
+                P-value obtained from scipy.stats.ttest_ind.
+                If a single array was given (x1 only), or if `paired` is True,
+                returns 'NIL'.
+                See https://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.stats.ttest_ind.html
+
+            pvalue_mann_whitney: float
+                Two-sided p-value obtained from scipy.stats.mannwhitneyu.
+                If a single array was given (x1 only), returns 'NIL'.
+                The Mann-Whitney U-test is a nonparametric unpaired test of the null
+                hypothesis that x1 and x2 are from the same distribution.
+                See https://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.stats.mannwhitneyu.html
+
+            pvalue_2samp_paired_ttest: float
+                P-value obtained from scipy.stats.ttest_rel.
+                If a single array was given (x1 only), or if `paired` is False,
+                returns 'NIL'.
+                See https://docs.scipy.org/doc/scipy-1.0.0/reference/generated/scipy.stats.ttest_rel.html
+
+            pvalue_wilcoxon: float
+                P-value obtained from scipy.stats.wilcoxon.
+                If a single array was given (x1 only), or if `paired` is False,
+                returns 'NIL'.
+                The Wilcoxons signed-rank test is a nonparametric paired test of
+                the null hypothesis that the related samples x1 and x2 are from
+                the same distribution.
+                See https://docs.scipy.org/doc/scipy-1.0.0/reference/scipy.stats.wilcoxon.html
     '''
     import matplotlib as mpl
     import matplotlib.pyplot as plt
