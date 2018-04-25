@@ -11,6 +11,7 @@ def plot(data, idx,
 
         custom_palette=None,
 
+        figure_title=None,
         swarm_label=None,
         contrast_label=None,
         swarm_ylim=None,
@@ -50,6 +51,9 @@ def plot(data, idx,
 
         color_col: list, default None
             Column to be used for colors.
+
+        figure_title: string, default None
+            Set the title for the figure.
 
         swarm_label, contrast_label: strings, default None
             Set labels for the y-axis of the swarmplot and the contrast plot,
@@ -796,5 +800,9 @@ def plot(data, idx,
         value=np.nan).dropna(axis=1)
     # Reset seaborn aesthetic parameters.
     sns.set()
+
+    if figure_title is not None:
+        fig.suptitle(figure_title, fontsize=28, y=0.95)
+
     # Return the figure and the results DataFrame.
     return fig, bootlist_df
