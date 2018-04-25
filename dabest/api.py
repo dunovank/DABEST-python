@@ -14,6 +14,9 @@ def plot(data, idx,
         figure_title=None,
         swarm_label=None,
         contrast_label=None,
+        wrap_labels=True,
+        wrap_labels_length=15,
+
         swarm_ylim=None,
         contrast_ylim=None,
 
@@ -58,6 +61,14 @@ def plot(data, idx,
         swarm_label, contrast_label: strings, default None
             Set labels for the y-axis of the swarmplot and the contrast plot,
             respectively.
+
+        wrap_labels: boolean, default True
+            If True, the labels will be wrapped if their length exceeds the
+            y-height of the Axes.
+
+        wrap_labels_length: integer, default 15
+            The maximum length of `swarm_label` and `contrast_label`, if
+            `wrap_labels` is True.
 
         float_contrast: boolean, default True
             Whether or not to display the halfviolin bootstrapped difference
@@ -479,6 +490,7 @@ def plot(data, idx,
             ax_raw = axx
         else:
             ax_raw = axx[j]
+        ax_raw.set_clip_on(False)
 
         if float_contrast:
             ax_contrast = ax_raw.twinx()
@@ -549,6 +561,7 @@ def plot(data, idx,
                         # we have got a None, so skip and move on.
                         pass
                 gapped_lines(plotdat, x=x, y=y,
+                             img_y_inches=fig_size[1],
                              # pseudo-hardcorded offset...
                              offset=np.max(xspans)+0.09,
                              type=group_summaries,
@@ -717,15 +730,16 @@ def plot(data, idx,
             y_label = make_nice_label(y, 15)
         else:
             y_label = y
-            
+
         if j > 0:
             ax_raw.set_ylabel('')
         else:
             if swarm_label is None:
                 ax_raw.set_ylabel(y_label)
             else:
-                if len(str(swarm_label)) > 20:
-                    nice_swarm_label = make_nice_label(swarm_label, 15)
+                if len(str(swarm_label)) > wrap_labels_length\
+                    and wrap_labels is True:
+                    nice_swarm_label = make_nice_label(swarm_label, wrap_labels_length)
                 else:
                     nice_swarm_label = str(swarm_label)
                 ax_raw.set_ylabel(nice_swarm_label)
@@ -740,8 +754,10 @@ def plot(data, idx,
                     else:
                         ax_contrast.set_ylabel('delta\n' + y_label)
                 else:
-                    if len(str(contrast_label)) > 20:
-                        nice_contrast_label = make_nice_label(contrast_label, 15)
+                    if len(str(contrast_label)) > wrap_labels_length\
+                        and wrap_labels is True:
+                        nice_contrast_label = make_nice_label(contrast_label,
+                                                              wrap_labels_length)
                     else:
                         nice_contrast_label = str(contrast_label)
                     ax_contrast.set_ylabel(nice_contrast_label)
