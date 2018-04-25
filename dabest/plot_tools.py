@@ -148,6 +148,7 @@ def get_swarm_spans(coll):
         return None
 
 def gapped_lines(data, x, y,
+                 img_y_inches,
                  type='mean_sd',
                  offset=0.3,
                  ax=None,
@@ -166,6 +167,10 @@ def gapped_lines(data, x, y,
 
     x, y: string.
         x and y columns to be plotted.
+
+    img_y_inches: float
+        The y-dimensions of the image in inches. Used to scale the central
+        measure marker.
 
     type: ['mean_sd', 'median_quartiles',], default 'mean_sd'
         Plots the summary statistics for each group. If 'mean_sd', then the
@@ -188,13 +193,16 @@ def gapped_lines(data, x, y,
 
     if ax is None:
         ax = plt.gca()
+    ax.set_clip_on(False)
 
     keys = kwargs.keys()
+    kwargs['clip_on'] = False
+
     if 'zorder' not in keys:
         kwargs['zorder'] = 5
 
     if 'lw' not in keys:
-        kwargs['lw'] = 2.
+        kwargs['lw'] = 2.5
 
     if 'color' not in keys:
         kwargs['color'] = 'black'
@@ -219,28 +227,33 @@ def gapped_lines(data, x, y,
         lows = lower_quartiles
         highs = upper_quartiles
 
-    original_zorder = kwargs['zorder']
-    span_color = kwargs['color']
-    span_lw = kwargs['lw']
+    # original_zorder = kwargs['zorder']
+    # span_color = kwargs['color']
+    # span_lw = kwargs['lw']
     for xpos, cm in enumerate(central_measures):
         # add vertical span line.
-        kwargs['zorder'] = original_zorder
-        kwargs['color'] = span_color
-        kwargs['lw'] = span_lw
+        # kwargs['zorder'] = original_zorder
+        # kwargs['color'] = span_color
+        # kwargs['lw'] = span_lw
         low_to_high = mlines.Line2D([xpos+offset, xpos+offset],
                                     [lows[xpos], highs[xpos]],
                                       **kwargs)
         ax.add_line(low_to_high)
 
-        # add horzontal central measure line.
-        kwargs['zorder'] = 6
-        kwargs['color'] = 'white'
-        kwargs['lw'] = 2
-        mean_line = mlines.Line2D([xpos+offset-0.01,
-                                    xpos+offset+0.01],
-                                    [cm, cm],
-                                    **kwargs)
-        ax.add_line(mean_line)
+        # add horzontal central measure marker.
+        ax.plot(xpos+offset, cm, 'o',
+                zorder=10, c='white',
+                markersize=5*(img_y_inches/8),
+                clip_on=False)
+
+        # kwargs['zorder'] = 6
+        # kwargs['color'] = 'white'
+        # kwargs['lw'] = 3 #
+        # mean_line = mlines.Line2D([xpos+offset-0.01,
+        #                             xpos+offset+0.01],
+        #                             [cm, cm],
+        #                             **kwargs)
+        # ax.add_line(mean_line)
 
 def make_nice_label(string, div):
     l = []
