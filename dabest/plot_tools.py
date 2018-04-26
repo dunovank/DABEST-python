@@ -243,7 +243,7 @@ def gapped_lines(data, x, y,
         # add horzontal central measure marker.
         ax.plot(xpos+offset, cm, 'o',
                 zorder=10, c='white',
-                markersize=5*(img_y_inches/8),
+                markersize=6*(img_y_inches/8),
                 clip_on=False)
 
         # kwargs['zorder'] = 6

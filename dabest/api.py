@@ -339,7 +339,7 @@ def plot(data, idx,
 
     # Set default kwargs first, then merge with user-dictated ones.
     # Swarmplot.
-    default_swarmplot_kwargs={'size':6}
+    default_swarmplot_kwargs={}
     if swarmplot_kwargs is None:
         swarmplot_kwargs = default_swarmplot_kwargs
     else:
