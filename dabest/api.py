@@ -113,7 +113,7 @@ def plot(data, idx,
         fig_size: tuple, default None
             The desired dimensions of the figure as a (length, width) tuple.
 
-        font_scale: float, default 1.4
+        font_scale: float, default 1.25
             The font size will be scaled by this number.
 
         stat_func: callable, default None
@@ -378,8 +378,8 @@ def plot(data, idx,
 
     # Aesthetic kwargs for sns.set().
     default_aesthetic_kwargs={'context': 'poster',
-        'style': 'ticks',
-        'font_scale': font_scale}
+                              'style': 'ticks',
+                              'font_scale': font_scale}
     if aesthetic_kwargs is None:
         aesthetic_kwargs = default_aesthetic_kwargs
     else:
@@ -424,10 +424,11 @@ def plot(data, idx,
         ws = 0.
     # Set figure size.
     if fig_size is None:
-        if len(idx) > 2:
-            fig_size = (11, (11/np.sqrt(2)) )
+        if len(all_plot_groups) > 2:
+            x_inches = all_plot_groups * 1.5
+            fig_size = (x_inches, (x_inches/np.sqrt(2)))
         else:
-            fig_size = (7, (7/np.sqrt(2)) )
+            fig_size = (4,8)
     # Create subplots.
     fig,axx=plt.subplots(ncols = ncols,
                          figsize=fig_size,
